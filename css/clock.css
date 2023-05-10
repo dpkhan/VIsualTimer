@@ -1,29 +1,8 @@
 
 body { 
-    background-color: transparent;
+    background-color: lightgrey;
 	display:flex;
 	justify-content: center;
-}
-
-
-#clockDiv {
-  border: 2px solid;
-  padding: 20px; 
-  width: 40%;
-  resize: both;
-  overflow: auto;
-  position: relative;
-}
-
-#clockface {
-  width: 100%;
-  height: 100%;
-  fill: #e0e2e4;
-  opacity: 1;
-  stroke: black;
-  stroke-width: .1;
-  stroke-linecap: round;
-}
 }
 
 .rows {
@@ -31,7 +10,6 @@ body {
     vertical-align: middle;
 	border-collapse: collapse;
 }
-
 
 .round1A{
   stroke: ivory;
@@ -49,8 +27,6 @@ body {
   stroke-width: 0.3; 
   stroke: olive;
 }
-
-
 
 .hours {
   stroke-width: 0.3;
@@ -75,12 +51,42 @@ body {
 
 }
 
-#label_path{
+#clockBox {
+  z-index: 3;
+  border: none;
+  background-color: white;
+  padding: 20px; 
+  width: 40%;
+  resize: both;
+  overflow: none;
+  position: relative;
+  box-shadow:  0 -4px 8px 0 rgba(0, 0, 0, 0.2), 0  -6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
+#clockDiv {
+  z-index: 3;
+  border: none;
+  background-color: transparent;
+  padding: 0; 
+  overflow: none;
+  resize: both;
+}
+
+
+#clockface {
+  width: 100%;
+  height: 100%;
+  fill: #e0e2e4;
+  opacity: 1;
+  stroke: black;
+  stroke-width: .1;
+  stroke-linecap: round;
+}
+
+#label_path{
     fill : none;
     stroke : none;
 }
-
 
 .pin {
   stroke: red;
@@ -98,36 +104,6 @@ body {
   filter: brightness(75%);
 }
 
-/* The Modal (background) */
-.menus {
-  display: block;
-  visibility: hidden;
-  position: relative; /* Stay in place */
-  z-index: 3; /* Sit on top */
-  opacity: 0;
-  right: 0;
-  top: 0;
-  width: 0%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  clip-path: inset(0% 100% 0% 0%);
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  transition: visibility 500ms, opacity 500ms, width 1s, clip-path 1s;
-}
-
-/* Modal Content/Box */
-.modal-content {
-  visibility: hidden;
-  opacity: 0;
-  background-color: #fefefe;
-  position: relative;
-  margin: 5px; /* 15% from the top and centered */
-  padding: 25px;
-  border: 1px solid #888;
-  width: 90%; /* Could be more or less, depending on screen size */
-  transition: visibility 500ms, opacity 500ms;
-}
 
 .tooltip {
   position: relative;
@@ -221,23 +197,85 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.openModal{
+/* The Modal (background) */
+.menus {
+  display: block;
+  position: relative; 
+  z-index: 1; 
   opacity: 1;
+  right: 0;
+  top: 0;
+  width: 0%; /* Full width */
+  height: 80%; /* Full height */
+  overflow: hidden; /* Enable scroll if needed */
+  background-color: #fefefe;
+  box-shadow:  0 -4px 8px 0 rgba(0, 0, 0, 0.2), 0  -6px 20px 0 rgba(0, 0, 0, 0.19);
+  animation: 0.5s ease-in normal both closeMenu;
+}
+
+/* Modal Content/Box */
+.modal-content {
   visibility: visible;
-  width: 50%;
-  clip-path: inset(0% 0% 0% 0%);
+  opacity: 1;
+  background-color: #fefefe;
+  position: relative;
+  overflow: hidden;
+  margin: 5px; /* 15% from the top and centered */
+  padding: 25px;
+  width: 90%; /* Could be more or less, depending on screen size */
+  animation: 0.3s ease-in normal forwards closeBox;
+
+}
+
+.helpmenu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: space-around;
+  row-gap: 5%;
+  column-gap: 5%;
+  position: relative; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  opacity: 1;
+  left: 0;
+  top: 0;
+  padding: 1%;
+  width: 40%; /* Full width */
+  height: 80vh%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #EEEEEE;
+  box-shadow:  0 -4px 8px 0 rgba(0, 0, 0, 0.2), 0  -6px 20px 0 rgba(0, 0, 0, 0.19);
+  animation: 0.3s ease-in normal forwards closeMenu;
+}
+
+.helpItem {
+	  width: 25%;
+	  height: 40%;
+	  flex-grow: 1;
+      background-color: white;
+      box-shadow:  0 -2px 8px 0 rgba(0, 0, 0, 0.2), 0  -4px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .openContent{
-  opacity: 1;
-  visibility: visible;
+  animation: 0.5s ease-out normal forwards openBox;
 }
+
+.openModal{
+  animation: 0.3s ease-in normal forwards openMenu;
+}
+
+.openHelp{
+  animation: 0.3s ease-in normal forwards openHelp;
+}
+
 
 #menubtn {
   width: 30px;
   height: 30px;
   background : url( "../images/menu-up.svg" ) no-repeat center center;
   border : none;
+  border-radius: 10px;  
   color : transparent;
   position: absolute;
   top:5px;
@@ -246,16 +284,32 @@ input:checked + .slider:before {
   z-index: 5;
 }
 
+
 #closebtn {
   width: 30px;
   height: 30px;
   background : url( "../images/menu-up.svg" ) no-repeat center center;
   border : none;
+  border-radius: 10px;
   color : transparent;
   position: absolute;
   top: 5px;
-  left: 1px;
+  left: 5px;
   transform: rotate(90deg);
+  z-index: 5;
+}
+
+#resetIcon {
+  width: 25px;
+  height: 25px;
+  background : url(  "../images/reset.png" ) no-repeat center center;
+  background-size: contain;
+  border : none;  
+  border-radius: 10px;
+  color : transparent;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
   z-index: 5;
 }
 
@@ -265,10 +319,107 @@ input:checked + .slider:before {
   background : url( "../images/full_screen.png") no-repeat center center;
   background-size: contain;
   border : none;
+  border-radius: 10px;
   color : transparent;
   position: absolute;
-  top: 5px;
+  bottom: 5px;
   left: 1px;
   transform: rotate(90deg);
   z-index: 5;
 }
+
+#helpbtn {
+  width: 25px;
+  height: 25px;
+  background : url(  " ../images/help.png" ) no-repeat center center;
+  background-size: contain;
+  border : none;  
+  border-radius: 10px;
+  color : transparent;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 5;
+}
+
+
+#menubtn:hover, #closebtn:hover, #fullScreen:hover, #resetIcon:hover, #helpbtn:hover{
+  background-color: antiquewhite;
+}
+
+#menubtn:active, #closebtn:active, #fullScreen:active, #resetIcon:active, #helpbtn:active {
+  background-color: rosybrown;
+}
+
+@keyframes openMenu{
+	from {
+		width: 0%;
+		opacity: 0.5;
+		visibility: hidden;
+	}
+	
+	to {
+		width: 40%;
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+@keyframes openHelp{
+	from {
+		width: 0%;
+		opacity: 0.5;
+		visibility: hidden;
+	}
+	
+	to {
+		width: 40%;
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+
+@keyframes closeMenu{
+	from {
+		width: 40%;
+		opacity: 1;
+		visibility: visible;
+	}
+	
+	to {
+		width: 0%;
+		opacity: 0.5;
+		visibility: hidden;
+	}
+}
+
+
+@keyframes openBox{
+	from {
+		width: 0%;
+		opacity: 0;
+		visibility: hidden;
+	}
+	
+	to {
+		width: 90%;
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+@keyframes closeBox{
+	from {
+		width: 90%;
+		opacity: 1;
+		visibility: visible;
+	}
+	
+	to {
+		width: 0%;
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
