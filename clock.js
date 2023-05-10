@@ -20,17 +20,18 @@ var labelText = document.getElementById("labeltext");
 
 var settings = document.getElementById("settings");
 var modalContent = document.getElementById("myModalContent");
+var help = document.getElementById("help");
 var menuBtn = document.getElementById("menubtn");
 var closeBtn = document.getElementById("closebtn");
-var fullButton = document.getElementById("fullScreen");
+var fullBtn = document.getElementById("fullScreen");
+var helpBtn = document.getElementById( "helpbtn");
 var reset = document.getElementById("reset");
+var resetIcon = document.getElementById("resetIcon");
 var cancelButton = document.getElementById("cancelB");
 var submitButton = document.getElementById("submitB");
 var clockDiv = document.getElementById("clockDiv")
-console.log("here1");
 
 menuBtn.onclick = function() {
-  console.log("clicked");
   settings.classList.add("openModal");
   modalContent.classList.add("openContent");
   menuBtn.style.visibility = "hidden";
@@ -38,17 +39,22 @@ menuBtn.onclick = function() {
 }
 
 closeBtn.onclick = function() {
-  console.log("closed");
   settings.classList.remove("openModal");
   modalContent.classList.remove("openContent");
   menuBtn.style.visibility = "visible";
   closeBtn.style.visibility = "hidden";
-
 }
 
-fullButton.onclick = function() {
+helpBtn.onclick = function() {
+  console.log("clicked");
+  help.classList.toggle("openHelp");
+}
 
-	
+
+
+fullBtn.onclick = function() {
+
+//  clockDiv.style.backgroundColor = "transparent";
   if ( document.fullscreenEnabled || /* Standard syntax */
        document.webkitFullscreenEnabled || /* Safari */
       document.msFullscreenEnabled/* IE11 */ ){ 
@@ -62,8 +68,6 @@ fullButton.onclick = function() {
 
       } 
 }
-
-
 
 submitButton.disabled = true;
 
@@ -94,6 +98,7 @@ var rows = ["","","","","","",""];
 var labelP = ["","","","","","",""]; 
 var labels = ["","","","","","",""];
 var enable = ["","","","","","",""];
+var labelPaths = ["","","","","","",""];
 
 var rings = new Array();
 var minRad = (-1) * Math.PI / 30;
@@ -124,16 +129,27 @@ for (let i=0; i < nPicks; i++){
   tool[i] = document.getElementById("tool"+i);
   rows[i] = document.getElementById("row"+i);
   labelP[i] = document.getElementById("label"+i);
+  labelPath[i] = document.getElementById("label"+i) 
 
 }
 
-getData(['status', 'popout', 'times', 'colors', 'labels', 'diff'], 
+ clearSwath(0);
+  clearSwath(1);
+  clearSwath(2);
+  clearSwath(3);
+  clearSwath(4);
+  clearSwath(5);
+  clearSwath(6);
+  clearSwath(7);
+  clearSwath(8);
+  clearSwath(9);
+
+getData(['status', 'times', 'colors', 'labels', 'diff'], 
    function(data) { 
 	var temp = 0;
 	if ( !(isNaN(data.status)) ){
 	status = data.status;
 	count = status;
-	popout = data.popout;
 	times = data.times;
 	colors = data.colors;
 	labels = data.labels;
@@ -168,7 +184,7 @@ getData(['status', 'popout', 'times', 'colors', 'labels', 'diff'],
          } else {
             rads = [42, 32, 18];
          }
-
+		
 	if (status > 0){
   	  setupAlarms();
 	  updateSeconds();
@@ -529,70 +545,12 @@ menu.onclick = function() {
 */
 
 reset.onclick = function() {
+	
+	resetAll();
+}
 
-  document.getElementById("test").value = "";
-  
-  status = -1;
-
-  popout = 0;
-
-  tool[0].style.visibility = "";
-  timeP[1].setAttribute("disabled","true");
-
-
-  colors = ["#fffff0", "#00ff00", "#ffff00", "#ffa500", "#ff0000", "#0000ff", "#800080"];
-  times = ["","","","","","",""];
-  labels = ["","","","","","",""]; 
-  mins = ["","","","","","",""];
-  mint = ["","","","","","",""];
-  hrs = ["","","","","","",""];
-  hrt = ["","","","","","",""];
-  diff = ["","","","","","",""];
-  difft = diff;
-
-
- // chrome.runtime.sendMessage({greeting: "bye"}, function(response) {
- //                document.getElementById("test").value = response.farewell;
- // });
-
-  for (let i = 0; i < nPicks; i++) {
-    tool[i].style.visibility = "";
-    colorP[i].value = colors[i];
-    labelP.value = "";
-    if (i > 1){
-      timeP[i].removeEventListener ("input", enable[i]);
-      rows[i].style.display = "none";
-    }
-    timeP[i].value = "";
-  }
-
-  clearSwath(0);
-  clearSwath(1);
-  clearSwath(2);
-  clearSwath(3);
-  clearSwath(4);
-  clearSwath(5);
-  clearSwath(6);
-  clearSwath(7);
-  clearSwath(8);
-  clearSwath(9);
-
-
-
-  bezel.style.fill = "#e0e2e4";
-  labelText.innerHTML = "";
-
-  count = 0;
-  setData( "times", times );
-  setData( "colors", colors );
-  setData( "status", status );
-  setData( "labels", labels );
-  setData( "diff", diff );
-
-//  chrome.runtime.sendMessage({greeting: "update"}, function(response) {
-//                 document.getElementById("test").value = response.farewell;
-
-
+resetIcon.onclick = function() {
+	resetAll();
 }
 
 
@@ -793,10 +751,28 @@ function createPath (r, smin, emin){
 			r + " " + r + " 0 1 1 " + ex + " " + ey + " z" ;
 	} else {
 		return "M 0 0 L " + sx + " " + sy + " " + "A " +
-			r + " " + r + " 0 0 1 " + ex + " " + ey + " z" ;
-	
+			r + " " + r + " 0 0 1 " + ex + " " + ey + " z" ;	
 	}
 }
+
+function labelPath (r, smin, emin){
+
+	var sy = (-1) * r * Math.cos( smin * minRad );
+	var sx = (-1) * r * Math.sin( smin * minRad );
+	var ey = (-1) * r * Math.cos( emin * minRad );
+	var ex = (-1) * r * Math.sin( emin * minRad );
+
+	return "M 0 0 L " + sx + " " + sy + " " + " z" ;
+/*
+	
+	if ( (((emin-smin) + 60)%60) > 30 ){
+		return "M 0 0 L " + sx + " " + sy + " " + " z" ;
+	} else {
+		return "M 0 0 L " + sx + " " + sy + " " + "A " +
+			r + " " + r + " 0 0 1 " + ex + " " + ey + " z" ;	
+	} */
+}
+
 
 function timeDiff (startH, startM, endH, endM){
 
@@ -1002,22 +978,78 @@ function pickTextColor(bgColor) {
 
 function getData( dataNames, callback ){
 	let data = {};
-	for (let key in dataNames ){
-		data[key] = localStorage.getItem(key);
+	console.log(dataNames);
+	for (let key of dataNames ){
+		data[key] = JSON.parse(localStorage.getItem(key));
+		console.log(key);
+		console.log(data[key]);
 	}
 
-	if (typeof callback == "function")
-                callback(data);
-
+    callback(data);
 	
 }
 
 function setData( key, data ){
 
 		localStorage.setItem(key, JSON.stringify(data));
+	    console.log(key + "," + JSON.stringify(data));
 	
 }
 
 
+function resetAll() {
+  
+  status = -1;
+
+  tool[0].style.visibility = "";
+  timeP[1].setAttribute("disabled","true");
+
+
+  colors = ["#fffff0", "#00ff00", "#ffff00", "#ffa500", "#ff0000", "#0000ff", "#800080"];
+  times = ["","","","","","",""];
+  labels = ["","","","","","",""]; 
+  mins = ["","","","","","",""];
+  mint = ["","","","","","",""];
+  hrs = ["","","","","","",""];
+  hrt = ["","","","","","",""];
+  diff = ["","","","","","",""];
+  difft = diff;
+
+  for (let i = 0; i < nPicks; i++) {
+    tool[i].style.visibility = "";
+    colorP[i].value = colors[i];
+    labelP.value = "";
+    if (i > 1){
+      timeP[i].removeEventListener ("input", enable[i]);
+      rows[i].style.display = "none";
+    }
+    timeP[i].value = "";
+  }
+
+  clearSwath(0);
+  clearSwath(1);
+  clearSwath(2);
+  clearSwath(3);
+  clearSwath(4);
+  clearSwath(5);
+  clearSwath(6);
+  clearSwath(7);
+  clearSwath(8);
+  clearSwath(9);
+
+
+
+  bezel.style.fill = "#e0e2e4";
+  labelText.innerHTML = "";
+
+  count = 0;
+  setData( "times", times );
+  setData( "colors", colors );
+  setData( "status", status );
+  setData( "labels", labels );
+  setData( "diff", diff );
+
+
+}
 
 
