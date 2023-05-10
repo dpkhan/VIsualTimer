@@ -87,7 +87,7 @@ var times = ["","","","","","",""];
 var timeP = ["","","","","", "", ""];
 var colorP = ["","","","","", "", ""];
 var tool = ["","","","","", "", ""];
-var colors = ["#fffff0", "", "", "", "", ""];
+var colors = ["#fffff0", "#00ff00", "#ffff00", "#ffa500", "#ff0000", "#0000ff", "#800080"];
 var diff = ["", "", "", "", ""];
 var mins = ["","","","","", "", ""];
 var hrs = ["","","","","", "", ""];
@@ -133,23 +133,13 @@ for (let i=0; i < nPicks; i++){
 
 }
 
- clearSwath(0);
-  clearSwath(1);
-  clearSwath(2);
-  clearSwath(3);
-  clearSwath(4);
-  clearSwath(5);
-  clearSwath(6);
-  clearSwath(7);
-  clearSwath(8);
-  clearSwath(9);
 
 getData(['status', 'times', 'colors', 'labels', 'diff'], 
    function(data) { 
 	var temp = 0;
-	if ( !(isNaN(data.status)) ){
+	if ( ("times" in localStorage) && !(isNaN(data.status)) ){
 	status = data.status;
-	count = status;
+	count = Math.max(status,0);
 	times = data.times;
 	colors = data.colors;
 	labels = data.labels;
@@ -188,6 +178,19 @@ getData(['status', 'times', 'colors', 'labels', 'diff'],
 	if (status > 0){
   	  setupAlarms();
 	  updateSeconds();
+	}else{
+      clearSwath(0);
+      clearSwath(1);
+      clearSwath(2);
+      clearSwath(3);
+      clearSwath(4);
+      clearSwath(5);
+      clearSwath(6);
+      clearSwath(7);
+      clearSwath(8);
+      clearSwath(9);
+      clearSwath(10);
+      clearSwath(11);	
 	}
 
 } 
@@ -556,13 +559,12 @@ resetIcon.onclick = function() {
 
 cancelButton.onclick = function() {   //close the modal when cancel is clicked
 //  settings.style.display = "none";
-	getData(['status', 'popout', 'times', 'colors', 'labels', 'diff'], 
+	getData(['status', 'times', 'colors', 'labels', 'diff'], 
 	  function(data) { 
 		var temp = 0;
 		if ( !(isNaN(data.status)) ){
 			status = data.status;
 			count = status;
-			popout = data.popout;
 			times = data.times;
 			colors = data.colors;
 			labels = data.labels;
@@ -662,9 +664,9 @@ submitButton.onclick = function() {
 
 function clearSwath ( num )
 {
-  var Aref = document.getElementById("alarm"+num+"A");
-  var Bref = document.getElementById("alarm"+num+"B");
-  var Cref = document.getElementById("alarm"+num+"C");
+  //var Aref = document.getElementById("alarm"+num+"A");
+  //var Bref = document.getElementById("alarm"+num+"B");
+  //var Cref = document.getElementById("alarm"+num+"C");
 
   bezel.style.fill = "#e0e2e4" ;
   bezel.style.opacity = 1 ;
@@ -688,7 +690,7 @@ function updateSeconds() {
 	min = nowTime.getMinutes();	
 	hr = nowTime.getHours();
 
-        diff[0] = timeDiff( hrs[0],mins[0],hr,min );
+    diff[0] = timeDiff( hrs[0],mins[0],hr,min );
 
 
 	secondHand.style.transform = 'rotate(' + ( sec *6) + 'deg)';
@@ -1002,7 +1004,7 @@ function resetAll() {
   status = -1;
 
   tool[0].style.visibility = "";
-  timeP[1].setAttribute("disabled","true");
+//  timeP[1].setAttribute("disabled","true");
 
 
   colors = ["#fffff0", "#00ff00", "#ffff00", "#ffa500", "#ff0000", "#0000ff", "#800080"];
@@ -1036,6 +1038,8 @@ function resetAll() {
   clearSwath(7);
   clearSwath(8);
   clearSwath(9);
+  clearSwath(10);
+  clearSwath(11);
 
 
 
